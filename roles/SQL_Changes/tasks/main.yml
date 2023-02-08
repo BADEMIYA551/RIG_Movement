@@ -16,7 +16,7 @@
   when: creation_status.stat.exists
       
 - name: Clearing contents of {{storenum}}_Rig_Mvmt_Work folder
-  win_shell: Remove-Item "C:\\{{storenum}}_Rig_Mvmt_Work\\*"
+  win_shell: Remove-Item -Recurse "C:\\{{storenum}}_Rig_Mvmt_Work\\*"
   when: creation_status.stat.exists
 
 - debug:
@@ -73,7 +73,7 @@
   when: azhqmigcreation_status.stat.exists
   
 - name: Clearing contents of Azure-HqMigration folder
-  win_shell: Remove-Item "C:\\Azure-HqMigration\\*"
+  win_shell: Remove-Item -Recurse "C:\\Azure-HqMigration\\*"
   when: azhqmigcreation_status.stat.exists
 
 - debug:
