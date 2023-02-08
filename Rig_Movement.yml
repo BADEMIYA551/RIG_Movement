@@ -1,0 +1,12 @@
+---
+- name: SQL Changes - RIG Movement between HQ
+  hosts: tag_DB
+  gather_facts: false
+  ignore_errors: false
+  no_log: true
+  
+  tasks:
+
+    # Including thr role to do SQL Changes
+    - include_role:
+        name: SQL_Changes
