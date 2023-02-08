@@ -1,13 +1,13 @@
 ---
 - name: Create a directory {{storenum}}_Rig_Mvmt_Work
   win_file:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work"
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work"
     state: directory
     force: yes
         
 - name: Checking whether {{storenum}}_Rig_Mvmt_Work folder created or not
-  stat:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work"
+  win_stat:
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work"
   register: creation_status
       
 - name: Confirming {{storenum}}_Rig_Mvmt_Work folder creation
@@ -24,13 +24,14 @@
         
 - name: Create a directory Logs Inside C:\{{storenum}}_Rig_Mvmt_Work
   win_file:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work\logs"
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work\\logs"
     state: directory
     force: yes
+  when: creation_status.stat.exists
         
 - name: Checking whether logs folder created or not
-  stat:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work\logs"
+  win_stat:
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work\\logs"
   register: logscreation_status
         
 - name: Confirming logs folder creation inside {{storenum}}_Rig_Mvmt_Work folder
@@ -40,13 +41,14 @@
       
 - name: Create a directory Flags Inside C:\{{storenum}}_Rig_Mvmt_Work
   win_file:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work\flags"
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work\\flags"
     state: directory
     force: yes
+  when: creation_status.stat.exists
         
 - name: Checking whether flags folder created or not
-  stat:
-    path: "C:\{{storenum}}_Rig_Mvmt_Work\flags"
+  win_stat:
+    path: "C:\\{{storenum}}_Rig_Mvmt_Work\\flags"
   register: flagscreation_status
       
 - name: Confirming flags folder creation inside {{storenum}}_Rig_Mvmt_Work folder
@@ -56,13 +58,13 @@
         
 - name: Create a directory in server HQ{{hqenv}}DBRET01 at C drive  to hold Powershell and DB Scripts
   win_file:
-    path: "C:\Azure-HqMigration"
+    path: "C:\\Azure-HqMigration"
     state: directory
     force: yes
         
 - name: Checking whether Azure-HqMigration folder created or not in server HQ{{hqenv}}DBRET01
-  stat:
-    path: "C:\Azure-HqMigration"
+  win_stat:
+    path: "C:\\Azure-HqMigration"
   register: azhqmigcreation_status
       
 - name: Confirming Azure-HqMigration folder creation
@@ -72,13 +74,14 @@
       
 - name: Create a directory Scripts Inside Azure-HqMigration folder
   win_file:
-    path: "C:\Azure-HqMigration\Scripts"
+    path: "C:\\Azure-HqMigration\\Scripts"
     state: directory
     force: yes
+  when: azhqmigcreation_status.stat.exists
         
 - name: Checking whether Scripts folder created or not
-  stat:
-    path: "C:\Azure-HqMigration\Scripts"
+  win_stat:
+    path: "C:\\Azure-HqMigration\\Scripts"
   register: scriptscreation_status
         
 - name: Confirming Scripts folder creation inside Azure-HqMigration folder
@@ -88,13 +91,14 @@
       
 - name: Create a directory SQL-Files Inside Azure-HqMigration folder
   win_file:
-    path: "C:\Azure-HqMigration\SQL-Files"
+    path: "C:\\Azure-HqMigration\\SQL-Files"
     state: directory
     force: yes
+  when: azhqmigcreation_status.stat.exists
         
 - name: Checking whether SQL-Files folder created or not
-  stat:
-    path: "C:\Azure-HqMigration\SQL-Files"
+  win_stat:
+    path: "C:\\Azure-HqMigration\\SQL-Files"
   register: sqlfilescreation_status
         
 - name: Confirming SQL-Files folder creation inside Azure-HqMigration folder
@@ -113,11 +117,12 @@
     - all_hqservers
     - all_proxyservers
     - all_posservers
+  when: creation_status.stat.exists
         
 - name: Filling the Template and Copying Necessary SQL Scripts to SQL-Files folder
   template:
     src: "SQL_Scripts/{{item}}.j2"
-    dest: C:\Azure-HqMigration\SQL-Files\{{item}}.sql
+    dest: "C:\\Azure-HqMigration\\SQL-Files\\{{item}}.sql"
     force: yes
   with_items:
     - Check_Proxy
@@ -125,11 +130,12 @@
     - Update_Proxy
     - Update_Pos
     - Check_Proxy_Connected_Pos_List
+  when: sqlfilescreation_status.stat.exists
         
 - name: Filling the Template and Copying Necessary Powershell Scripts to Scripts folder
   template:
     src: "Powershell_Scripts/{{item}}.j2"
-    dest: C:\Azure-HqMigration\Scripts\{{item}}.ps1
+    dest: "C:\\Azure-HqMigration\\Scripts\\{{item}}.bat"
     force: yes
   with_items:
     - check_azure_proxy
@@ -137,6 +143,7 @@
     - update_azure_proxy
     - update_azure_pos
     - generate_azure_proxy_connected_pos_list
+  when: scriptscreation_status.stat.exists
     
     
     `    
