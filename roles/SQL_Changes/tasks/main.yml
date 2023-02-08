@@ -71,6 +71,13 @@
   debug:
     msg: "Azure-HqMigration folder created successfully"
   when: azhqmigcreation_status.stat.exists
+  
+- name: Clearing contents of Azure-HqMigration folder
+  win_shell: Remove-Item "C:\\Azure-HqMigration\\*"
+  when: azhqmigcreation_status.stat.exists
+
+- debug:
+    msg: "Successfully Cleared the Old files if any in Azure-HqMigration folder"
       
 - name: Create a directory Scripts Inside Azure-HqMigration folder
   win_file:
